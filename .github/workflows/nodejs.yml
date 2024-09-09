@@ -22,13 +22,13 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: echo "No tests configured"
+      run: npm test
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-    - name: Deploy to a Server (e.g., via SSH, Heroku, etc.)
+    - name: Deploy via SSH
       run: echo "Deployment script goes here"
 
