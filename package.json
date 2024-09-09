@@ -1,17 +1,13 @@
 {
   "name": "first-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
- "scripts": {
-  "start": "node index.js",
-  "test": "mocha"
+  "type": "module",
+  "scripts": {
+  "test": "mocha --require @babel/register"
 },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "chai": "^5.1.1",
-    "mocha": "^10.7.3"
+  "dependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^10.2.0"
   }
 }
+

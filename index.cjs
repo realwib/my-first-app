@@ -1,6 +1,6 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+const http = import('http');
+const fs = import('fs');
+const path = import('path');
 
 const hostname = '127.0.0.1';
 const port = 3000;
