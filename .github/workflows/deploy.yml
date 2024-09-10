@@ -1,9 +1,9 @@
-name: Deploy to Server
+name: Deploy
 
 on:
   push:
     branches:
-      - main  # Adjust this to your default branch
+      - main
 
 jobs:
   deploy:
@@ -13,22 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH key
+      - name: Set up SSH
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SFTP_PRIVATE_KEY }}
 
-      - name: Add server to known hosts
+      - name: Upload files via SFTP
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      - name: SSH and Deploy
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd root/myapp
-            git pull origin main
-            npm install
-            pm2 restart all || nohup node index.js > output.log 2>&1 &
-            sudo ufw allow 3000/tcp
+          sftp -o StrictHostKeyChecking=no -i $HOME/.ssh/id_rsa user@your-server-ip <<EOF
+          mkdir -p /path/to/deploy
+          put -r . /path/to/deploy/
+          bye
           EOF
