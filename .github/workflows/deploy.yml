@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main
+      - main  # Deploy on push to the main branch
 
 jobs:
   deploy:
@@ -11,29 +11,23 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: List files
-        run: |
-          pwd
-          ls -la
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup SSH
+      - name: Copy files to server
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+          scp -r ./ root@${{ secrets.SERVER_IP }}:/root/myapp
 
-      - name: Copy files to the server
+      - name: Install dependencies and start application
         run: |
-          scp -rv ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/root/myapp
-
-      - name: Deploy the app on the server
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
+          ssh root@${{ secrets.SERVER_IP }} << 'EOF'
             cd /root/myapp
             npm install
-            nohup node index.js &
+            nohup node index.js > output.log 2>&1 &
+            sudo ufw allow 3000/tcp
             exit
           EOF
