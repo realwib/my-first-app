@@ -21,7 +21,7 @@ jobs:
       - name: Upload files via SFTP
         run: |
           sftp -o StrictHostKeyChecking=no -i $HOME/.ssh/id_rsa user@your-server-ip <<EOF
-          mkdir -p /path/to/deploy
-          put -r . /path/to/deploy/
+          mkdir -p root/myapp
+          put -r . root/myapp
           bye
           EOF
