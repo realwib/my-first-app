@@ -26,7 +26,7 @@ jobs:
       - name: SSH and Deploy
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            cd /path/to/deployment/directory
+            cd root/myapp
             git pull origin main
             npm install
             pm2 restart all || nohup node index.js > output.log 2>&1 &
