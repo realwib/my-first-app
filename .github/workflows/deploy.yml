@@ -13,6 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List files
+        run: |
+          pwd
+          ls -la
+
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -22,12 +27,12 @@ jobs:
 
       - name: Copy files to the server
         run: |
-          scp -r ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SERVER_USER }}/myapp
+          scp -rv ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/root/myapp
 
       - name: Deploy the app on the server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
-            cd /home/${{ secrets.SERVER_USER }}/myapp
+            cd /root/myapp
             npm install
             nohup node index.js &
             exit
