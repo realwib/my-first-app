@@ -1,4 +1,4 @@
-name: Node.js CI/CD Pipeline
+name: CI/CD for Node.js App on Render
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Set up Node.js
@@ -22,13 +22,16 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: echo "No tests configured"
+      run: echo "No tests configured"  # Replace with actual test commands if you have any
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-    - name: Deploy to a Server (e.g., via SSH, Heroku, etc.)
-      run: echo "Deployment script goes here"
+    - name: Trigger Deploy on Render
+      run: |
+        curl -X POST ${https://api.render.com/deploy/srv-crfsddd6l47c73e4n6tg?key=4ZgCwI6_q_Q}
+      env:
+        RENDER_DEPLOY_HOOK: ${{ secrets.https://api.render.com/deploy/srv-crfsddd6l47c73e4n6tg?key=4ZgCwI6_q_Q }}
 
