@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # Deploy on push to the main branch
+      - main  # Adjust this to your default branch
 
 jobs:
   deploy:
@@ -23,16 +23,12 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Copy files to server
+      - name: SSH and Deploy
         run: |
-          scp -r ./ root@${{ secrets.SERVER_IP }}:/root/myapp
-
-      - name: Install dependencies and start application
-        run: |
-          ssh root@${{ secrets.SERVER_IP }} << 'EOF'
-            cd /root/myapp
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            cd /path/to/deployment/directory
+            git pull origin main
             npm install
-            nohup node index.js > output.log 2>&1 &
+            pm2 restart all || nohup node index.js > output.log 2>&1 &
             sudo ufw allow 3000/tcp
-            exit
           EOF
