@@ -3,29 +3,27 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main  # Run this action when pushing to the main branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up SSH agent and add the private SSH key
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
 
-      # Step 3: Copy files to the remote server via SCP
       - name: Copy files to the server
         run: |
           scp -r ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }}:/home/${{ secrets.SERVER_USER }}/myapp
 
-      # Step 4: SSH into the server and start the Node.js app
       - name: Deploy the app on the server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << EOF
@@ -34,4 +32,3 @@ jobs:
             nohup node index.js &
             exit
           EOF
-
