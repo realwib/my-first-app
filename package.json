@@ -1,12 +1,20 @@
 {
   "name": "my-first-app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    1"type": "git",
+    "url": "git+https://github.com/realwib/my-first-app.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/realwib/my-first-app/issues"
+  },
+  "homepage": "https://github.com/realwib/my-first-app#readme",
+  "description": ""
 }
-
